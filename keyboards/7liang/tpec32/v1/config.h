@@ -62,7 +62,6 @@
 #define ENCODER_PAD_B   B5
 
 // TrackPoint pin
-<<<<<<< HEAD
 #define PS2_CLOCK_PIN   D2
 #define PS2_DATA_PIN    D5
 
@@ -71,10 +70,6 @@
 
 // #define PS2_MOUSE_USE_REMOTE_MODE
 #define PS2_MOUSE_INIT_DELAY        3000
-=======
-#define PS2_CLOCK_PIN   D5
-#define PS2_DATA_PIN    D2
->>>>>>> a8993e97abfd69b1f969907981f2ccfc8252e89e
 
 #ifdef PS2_USE_USART
 // UART 方式
