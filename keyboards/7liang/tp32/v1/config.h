@@ -16,7 +16,7 @@
 
 #pragma once
 
-#define PRODUCT_ID   0x0001
+#define PRODUCT_ID   0x0101
 #define DEVICE_VER   0x0001
 
 #define MATRIX_ROW_PINS { B0, D1, D3 }
