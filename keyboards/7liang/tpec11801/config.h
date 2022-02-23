@@ -31,6 +31,15 @@
 #define MATRIX_COL_PINS { }
 #define UNUSED_PINS
 
+// 74HC595
+#define HC595_NUMS      2
+#define HC595_SER_PIN   F4
+#define HC595_SCK_PIN   F0
+#define HC595_RCK_PIN   F1
+
+
+
+
 #define DIODE_DIRECTION COL2ROW
 
 #define DEBOUNCE 5
