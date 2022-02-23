@@ -15,6 +15,6 @@ BACKLIGHT_ENABLE 		= no        # Enable keyboard backlight functionality
 AUDIO_ENABLE 			= no        # Audio output
 SLEEP_LED_ENABLE		= no
 
-SRC += tp_encoder.c
+SRC += utils/ring_encoder.c
 
 DEFAULT_FOLDER = 7liang/tpec32/v1

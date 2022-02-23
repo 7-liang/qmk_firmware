@@ -1,4 +1,4 @@
-/* Copyright 2022 Se1enLiang(@skyjun)
+/* Copyright 2022 7Liang(@7-liang)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * two positioning only one pulse
  */
 
-#include "tp_encoder.h"
+#include "ring_encoder.h"
 
 // only one encoder, move index
 __attribute__((weak)) bool encoder_update_user(bool clockwise) { return true; }

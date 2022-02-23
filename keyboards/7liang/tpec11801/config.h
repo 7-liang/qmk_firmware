@@ -19,7 +19,7 @@
 #include "config_common.h"
 
 #define VENDOR_ID    0xF340
-#define PRODUCT_ID   0x0003
+#define PRODUCT_ID   0x0301
 #define DEVICE_VER   0x0001
 #define MANUFACTURER 7Liang
 #define PRODUCT      TpEC11801

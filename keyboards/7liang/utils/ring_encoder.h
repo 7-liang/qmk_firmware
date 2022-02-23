@@ -1,4 +1,4 @@
-/* Copyright 2022 Se1enLiang(@skyjun)
+/* Copyright 2022 7Liang(@7-liang)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

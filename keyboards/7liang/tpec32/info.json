@@ -1,7 +1,7 @@
 {
     "keyboard_name": "TpEC32",
-    "url": "https://github.com/skyjun/tpec32",
-    "maintainer": "SevenLiang",
+    "url": "https://github.com/7-liang",
+    "maintainer": "7liang",
     "layouts": {
         "LAYOUT_ortho_3x12": {
             "layout": [
