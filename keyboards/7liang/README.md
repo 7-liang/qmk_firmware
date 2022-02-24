@@ -15,4 +15,4 @@ qmk compile -kb 7liang/tp32 -km default
 or
 ``` shell
 make 7liang/tp32:default
-~~~
+```
