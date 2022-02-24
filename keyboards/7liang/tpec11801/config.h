@@ -28,15 +28,18 @@
 #define MATRIX_COLS 18
 
 #define MATRIX_ROW_PINS { E6, F5, F6, F7, C7, C6, B6 }
-#define MATRIX_COL_PINS { }
+#define MATRIX_COL_PINS { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, B7, B3 }
 #define UNUSED_PINS
 
 // 74HC595
-#define HC595_NUMS      2
-#define HC595_SER_PIN   F4
-#define HC595_SCK_PIN   F0
-#define HC595_RCK_PIN   F1
-
+#define HC595_NUMS              2
+#define HC595_SER_PIN           F4
+#define HC595_SCK_PIN           F0
+#define HC595_RCK_PIN           F1
+#define USE_BOTH_595_AND_GPIO
+//                    col           1     2     3     4     5     6     7     8     9     10    11    12    13    14    15    16
+#define HC595_MATRIX_DATA       {{ 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },  \
+                                 { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 }}
 
 
 

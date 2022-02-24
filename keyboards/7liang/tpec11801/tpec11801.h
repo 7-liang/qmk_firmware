@@ -1,3 +1,11 @@
+/*
+ * @Description    : 
+ * @version        : 
+ * @Author         : JunLee
+ * @Date           : 2022-02-23 08:15:35
+ * @LastEditTime   : 2022-02-24 16:39:39
+ * @FilePath       : \qmk_firmware\keyboards\7liang\tpec11801\tpec11801.h
+ */
 // Copyright 2022 7liang (@skyjun)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
