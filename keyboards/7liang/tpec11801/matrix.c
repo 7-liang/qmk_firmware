@@ -3,7 +3,7 @@
  * @version        : 
  * @Author         : JunLee
  * @Date           : 2022-02-24 11:44:13
- * @LastEditTime   : 2022-02-24 17:25:02
+ * @LastEditTime: 2022-02-24 23:41:18
  * @FilePath       : \qmk_firmware\keyboards\7liang\tpec11801\matrix.c
  */
 
@@ -50,7 +50,7 @@ static void unselect_cols(void)
     writePinLow(HC595_RCK_PIN);
     for (uint8_t i = 0; i < HC595_NUMS; i++)
     {
-        hc595_shift_data(0x00);
+        hc595_shift_data(0xFF);
     }
     writePinHigh(HC595_RCK_PIN);
 }
@@ -101,7 +101,7 @@ static bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col)
         matrix_row_t last_row_value     = current_matrix[row_idx];
         matrix_row_t current_row_value  = last_row_value;
 
-        if (readPin(row_pins[row_idx]) == 1)
+        if (readPin(row_pins[row_idx]) == 0)
         {
             current_row_value   |= (MATRIX_ROW_SHIFTER << current_col);
         }
