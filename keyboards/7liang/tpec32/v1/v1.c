@@ -40,9 +40,9 @@ void matrix_scan_kb(void)
    encoder_scan(); 
 }
 
-bool encoder_update_kb(bool clockwise)
+bool encoder_update_kb(uint8_t index, bool clockwise)
 {
-    if (!encoder_update_user(clockwise)) return false;
+    if (!encoder_update_user(index, clockwise)) return false;
 
     return true;
 }

@@ -22,73 +22,84 @@
 
 #include "ring_encoder.h"
 
-// only one encoder, move index
-__attribute__((weak)) bool encoder_update_user(bool clockwise) { return true; }
+#if !defined(ENCODERS_PAD_A) || !defined(ENCODERS_PAD_B)
+#   error "No encoder pads defined by ENCODERS_PAD_A and ENCODERS_PAD_B"
+#endif
 
-__attribute__((weak)) bool encoder_update_kb(bool clockwise) { return encoder_update_user(clockwise); }
+static pin_t EC_A_Pins[]    = ENCODERS_PAD_A;
+static pin_t EC_B_Pins[]    = ENCODERS_PAD_B;
+#define EC_NUMS (sizeof(EC_A_Pins) / sizeof(pin_t))
 
-static pin_t EC_A_Pin       = ENCODER_PAD_A;
-static pin_t EC_B_Pin       = ENCODER_PAD_B;
-static uint8_t EC_A_Now     = 0;
-static uint8_t EC_B_Now     = 0;
-static uint8_t EC_A_Last    = 0;
-static uint8_t EC_B_Last    = 0;
+static uint8_t EC_A_Curr[EC_NUMS]   = {0};      // 当前电平
+static uint8_t EC_B_Curr[EC_NUMS]   = {0};
+static uint8_t EC_A_Last[EC_NUMS]   = {0};      // 上次电平
+static uint8_t EC_B_Last[EC_NUMS]   = {0};
+
+__attribute__((weak)) bool encoder_update_user(uint8_t index, bool clockwise) { return true; }
+
+__attribute__((weak)) bool encoder_update_kb(uint8_t index, bool clockwise) { return encoder_update_user(index, clockwise); }
+
 
 void encoder_init(void)
 {
-    setPinInputHigh(EC_A_Pin);
-    setPinInputHigh(EC_B_Pin);
+    for (uint8_t i = 0; i < EC_NUMS; i++)
+    {
+        setPinInputHigh(EC_A_Pins[i]);
+        setPinInputHigh(EC_B_Pins[i]);
+    }
 }
 
 bool encoder_scan(void)
 {
-    bool changed        = false;
-    int8_t scan_result  = 0;
+    bool changed                = false;
+    int8_t scan_result[EC_NUMS] = {0};
 
-    EC_A_Now            = readPin(EC_A_Pin);
-    EC_B_Now            = readPin(EC_B_Pin);
-
-    // 判断当前电平是否等于上一次的电平
-    // 正转，A 0>1 B 1>0，A 1>0 B 0>1
-    // 反转，A 0>1 B 0>1，A 1>0 B 1>0
-    if (EC_A_Now != EC_A_Last)
+    for (uint8_t i = 0; i < EC_NUMS; i++)
     {
-        // 旋转后，电平为高时
-        if (EC_A_Now == 1)
+        EC_A_Curr[i]    = readPin(EC_A_Pins[i]);
+        EC_B_Curr[i]    = readPin(EC_B_Pins[i]);
+
+        // 编码器旋转方向判断依据当前电平和上次电平的正反相
+        //    last   curr        last   curr        last   curr        last   curr
+        // A (  0  ->  1  ) & B (  1  ->  0  ) | A (  1  ->  0  ) & B (  0  ->  1  ), 正转 forward
+        // A (  0  ->  1  ) & B (  0  ->  1  ) | A (  1  ->  0  ) & B (  1  ->  0  ), 反转 reverse
+        if (EC_A_Curr[i] != EC_A_Last[i])
         {
-            if (EC_B_Last && !EC_B_Now) scan_result = 1;                // 上次高，本次低，正转
-            else if (!EC_B_Last && EC_B_Now) scan_result = -1;          // 上次低，本次高，反转
-            else if (EC_B_Now == EC_B_Last)                             // 两次电平相等，转动后接着反转
+            if (EC_A_Curr[i] == 1)
             {
-                if (!EC_B_Now) scan_result = 1;                         // 当前低，正转
-                else scan_result = -1;                                  // 当前高，反转
+                if (EC_B_Last[i] && !EC_B_Curr[i]) scan_result[i] = 1;          // b last = 1 and curr = 0, forward
+                else if (!EC_B_Last[i] && EC_B_Curr[i]) scan_result[i] = -1;    // b last = 0 and curr = 1, reverse
+                else if (EC_B_Curr[i] == EC_B_Last[i])                          // last == curr, encoder quick reversal
+                {
+                    if (!EC_B_Curr[i]) scan_result[i] = 1;                      // curr == 0, forward
+                    else scan_result[i] = -1;                                   // curr == 1, reverse
+                }
+            }
+            else
+            {
+                if (EC_B_Last[i] && !EC_B_Curr[i]) scan_result[i] = -1;         // b last = 1 and curr = 0, reverse
+                else if (!EC_B_Last[i] && EC_B_Curr[i]) scan_result[i] = 1;     // b last = 0 and curr = 1, forward
+                else if (EC_B_Curr[i] == EC_B_Last[i])                          // encoder quick reversal
+                {
+                    if (!EC_B_Curr[i]) scan_result[i] = -1;                     // curr == 0, reverse
+                    else scan_result[i] = 1;                                    // curr == 1, forward
+                }
+            }
+
+            // update last
+            EC_A_Last[i]    = EC_A_Curr[i];
+            EC_B_Last[i]    = EC_B_Curr[i];
+
+            if (scan_result[i] == 1)
+            {
+                changed |= encoder_update_kb(i, true);
+            }
+            else if (scan_result[i] == -1)
+            {
+                changed |= encoder_update_kb(i, false);
             }
         }
-        // 转动后，电平为低时
-        else
-        {
-            if (EC_B_Last && !EC_B_Now) scan_result = -1;               // 上次高，本次低，反转
-            else if (!EC_B_Last && EC_B_Now) scan_result = 1;           // 上次低，本次高，正转
-            else if (EC_B_Now == EC_B_Last)                             // 转动后接着反转，两次电平相等
-            {
-                if (!EC_B_Now) scan_result = -1;                        // 当前低，反转
-                else scan_result = 1;                                   // 当前高，正转
-            }
-        }
+    }    
 
-        // 更新 Last 值
-        EC_A_Last   = EC_A_Now;
-        EC_B_Last   = EC_B_Now;
-
-        if (scan_result == 1)
-        {
-            changed = encoder_update_kb(true);
-        }
-        else if (scan_result == -1)
-        {
-            changed = encoder_update_kb(false);
-        }
-    }
-    
     return changed;
 }

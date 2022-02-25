@@ -15,27 +15,26 @@
  */
 
 #include "74hc595.h"
-#include "matrix.h"
 #include "gpio.h"
 #include "wait.h"
-#include "quantum.h"
 #include "util.h"
 
 #ifdef DIRECT_PINS
-#   error invalid DIRECT_PINS for 74hc595 matrix
+#   error "invalid DIRECT_PINS for 74hc595 matrix"
 #elif (DIODE_DIRECTION == COL2ROW)
-#   error DIODE_DIRECTION must be defined as ROW2COL
+#   error "DIODE_DIRECTION must be defined as ROW2COL"
 #elif (DIODE_DIRECTION == ROW2COL)
-#   ifdef USE_BOTH_595_AND_GPIO
+#   ifdef HC595_AND_GPIO_BOTH_USED
 const pin_t col_pins[MATRIX_COLS]                   = MATRIX_COL_PINS;
 #   endif
 const pin_t row_pins[MATRIX_ROWS]                   = MATRIX_ROW_PINS;
 const uint8_t mask_of_595[HC595_NUMS][MATRIX_COLS]  = HC595_MATRIX_DATA;
 #else
-#   error DIODE_DIRECTION must be defined
+#   error "DIODE_DIRECTION must be defined"
 #endif
 
-void hc595_write_byte(uint8_t data)
+// 向移位寄存器写入一个字节，从低往高
+static void hc595_write_byte(uint8_t data)
 {
     for (uint8_t i = 0; i < 8; i++)
     {
@@ -45,14 +44,16 @@ void hc595_write_byte(uint8_t data)
     }
 }
 
-void unselect_rows(void)
+// 将行设置为上拉输入
+static void unselect_rows(void)
 {
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) setPinInputHigh(row_pins[i]);
 }
 
-void unselect_cols(void)
+// 拉高所有列
+static void unselect_cols(void)
 {
-#   ifdef USE_BOTH_595_AND_GPIO
+#   ifdef HC595_AND_GPIO_BOTH_USED
     for (uint8_t i = 0; i < MATRIX_COLS; i++)
     {
         if (col_pins[i] != NO_PIN) writePinHigh(col_pins[i]);
@@ -64,9 +65,10 @@ void unselect_cols(void)
     writePinHigh(HC595_RCK_PIN);
 }
 
-void select_cols(uint8_t col)
+// 拉低指定列
+static void select_cols(uint8_t col)
 {
-#   ifdef USE_BOTH_595_AND_GPIO
+#   ifdef HC595_AND_GPIO_BOTH_USED
     if (col_pins[col] != NO_PIN)
     {
         writePinLow(col_pins[col]);
@@ -74,14 +76,15 @@ void select_cols(uint8_t col)
     }
 #   endif
 
-    writePinLow(HC595_RCK_PIN);
-    for (uint8_t i = 0; i < HC595_NUMS; i++)
+    writePinLow(HC595_RCK_PIN);                         // 拉低存储寄存器时钟
+    for (uint8_t i = HC595_NUMS; i > 0; i--)            // 向移位寄存器写入数据，拉低相应列，其余列拉高
     {
-        hc595_write_byte(mask_of_505[i][col]);
+        hc595_write_byte(mask_of_595[i - 1][col]);
     }
-    writePinHigh(HC595_RCK_PIN);
+    writePinHigh(HC595_RCK_PIN);                        // 拉高存储寄存器时钟，并行输出写入的数据
 }
 
+// 初始化 74hc595 io 输出并拉高，行引脚上拉输入，列输出高
 void matrix_pins_init(void)
 {
     setPinOutput(HC595_SCK_PIN);
@@ -91,7 +94,7 @@ void matrix_pins_init(void)
     writePinHigh(HC595_SER_PIN);
     writePinHigh(HC595_RCK_PIN);
     
-#   ifdef USE_BOTH_595_AND_GPIO
+#   ifdef HC595_AND_GPIO_BOTH_USED
     for (uint8_t i = 0; i < MATRIX_COLS; i++)
     {
         if (col_pins[i] != NO_PIN)
@@ -106,11 +109,12 @@ void matrix_pins_init(void)
     unselect_cols();
 }
 
-bool read_rows_on_col(matrix_row_t currrent_matrix[], uint8_t current_col)
+// 扫描，循环拉低所有列
+bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col)
 {
     bool matrix_changed = false;
 
-    select_col(current_col);
+    select_cols(current_col);
     matrix_output_select_delay();
 
     for (uint8_t row_idx = 0; row_idx < MATRIX_ROWS; row_idx++)
@@ -124,7 +128,7 @@ bool read_rows_on_col(matrix_row_t currrent_matrix[], uint8_t current_col)
         }
         else
         {
-            current_val &= (MATRIX_ROW_SHIFTER << current_col);
+            current_val &= ~(MATRIX_ROW_SHIFTER << current_col);
         }
 
         if (last_val != current_val)

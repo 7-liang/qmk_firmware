@@ -67,24 +67,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-bool encoder_update_user(bool clockwise)
+bool encoder_update_user(uint8_t index, bool clockwise)
 {
-    if (IS_LAYER_ON(_BASE))
+    switch (index)
     {
-        if (clockwise) tap_code(KC_WH_U);
-        else tap_code(KC_WH_D);
-    } else if (IS_LAYER_ON(_L1))
-    {
-        if (clockwise) tap_code(KC_VOLU);
-        else tap_code(KC_VOLD);
-    } else if (IS_LAYER_ON(_L2))
-    {
-        if (clockwise) tap_code(KC_HOME);
-        else tap_code(KC_END);
-    } else if (IS_LAYER_ON(_L3))
-    {
-        if (clockwise) tap_code(KC_PGUP);
-        else tap_code(KC_PGDN);
+        case 0:
+            if (IS_LAYER_ON(_BASE))
+            {
+                if (clockwise) tap_code(KC_WH_U);
+                else tap_code(KC_WH_D);
+            } else if (IS_LAYER_ON(_L1))
+            {
+                if (clockwise) tap_code(KC_VOLU);
+                else tap_code(KC_VOLD);
+            } else if (IS_LAYER_ON(_L2))
+            {
+                if (clockwise) tap_code(KC_HOME);
+                else tap_code(KC_END);
+            } else if (IS_LAYER_ON(_L3))
+            {
+                if (clockwise) tap_code(KC_PGUP);
+                else tap_code(KC_PGDN);
+            }
+        break;
+
+        default: break;
     }
 
     return true;

@@ -58,8 +58,8 @@
 #define LED_KEY_PRESS_PIN   F6
 
 // alps srgp 200200 encoder pin
-#define ENCODER_PAD_A   B6
-#define ENCODER_PAD_B   B5
+#define ENCODERS_PAD_A   { B6 }
+#define ENCODERS_PAD_B   { B5 }
 
 // TrackPoint pin
 #define PS2_CLOCK_PIN   D2

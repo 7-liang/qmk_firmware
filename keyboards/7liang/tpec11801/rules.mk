@@ -8,7 +8,7 @@ BOOTLOADER = atmel-dfu
 #   change yes to no to disable
 #
 BOOTMAGIC_ENABLE = yes      # Enable Bootmagic Lite
-MOUSEKEY_ENABLE = no        # Mouse keys
+MOUSEKEY_ENABLE = yes        # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 CONSOLE_ENABLE = no         # Console for debug
 COMMAND_ENABLE = no         # Commands for debug and configuration
@@ -18,4 +18,10 @@ RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
 
 CUSTOM_MATRIX = lite
-QUANTUM_SRC	+= matrix.c
+SRC += utils/ring_encoder.c \
+       utils/74hc595.c \
+	   matrix.c
+
+PS2_MOUSE_ENABLE 		= yes 
+PS2_USE_USART 			= yes
+# PS2_USE_INT = yes

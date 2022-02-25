@@ -16,10 +16,7 @@
 
 #pragma once
 
-#if (DIODE_DIRECTION == COL2ROW)
-void select_cols_595(void);
-void unselect_cols_595(void);
-#else
-void select_rows_505(void);
-void unselect_rows_595(void);
-#endif
+#include "quantum.h"
+
+void matrix_pins_init(void);
+bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col);

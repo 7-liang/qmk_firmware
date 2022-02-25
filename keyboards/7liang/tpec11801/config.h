@@ -28,25 +28,23 @@
 #define MATRIX_COLS 18
 
 #define MATRIX_ROW_PINS { E6, F5, F6, F7, C7, C6, B6 }
+//                       |                           74hc595                            |                            74hc595                            |  gpio  |
+//                  col  |  1       2       3       4       5       6       7       8   |   9       10      11      12      13      14      15      16  | 17  18 |
 #define MATRIX_COL_PINS { NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, NO_PIN, B7, B3 }
 #define UNUSED_PINS
 
 // 74HC595
-#define HC595_NUMS              2
-#define HC595_SER_PIN           F4
-#define HC595_SCK_PIN           F0
-#define HC595_RCK_PIN           F1
-#define USE_BOTH_595_AND_GPIO
+#define HC595_NUMS              2       // 使用的片数
+#define HC595_SER_PIN           F4      // 串行数据输入
+#define HC595_SCK_PIN           F0      // 移位寄存器时钟，上升沿有效
+#define HC595_RCK_PIN           F1      // 存储寄存器时钟，上升沿有效，并行输出移位寄存器内的数据
+#define HC595_AND_GPIO_BOTH_USED        // 595 和 gpio 同时使用
+// 74hc595 的串转并数据，两片，每次扫描写入 2 字节，从列拉低行，相应位置 0，其余置 1
 //                    col           1     2     3     4     5     6     7     8     9     10    11    12    13    14    15    16
-// #define HC595_MATRIX_DATA       {{ 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },  \
-//                                  { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 }}
+#define HC595_MATRIX_DATA       {{ 0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },  \
+                                 { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE }}
 
-//                    col           1     2     3     4     5     6     7     8     9     10    11    12    13    14    15    16
-#define HC595_MATRIX_DATA       {{ 0xFE, 0xFD, 0xFB, 0xF7, 0xEF, 0xDF, 0xBF, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },  \
-                                 { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0xFD, 0xFB, 0xF7, 0xEF, 0xDF, 0xBF, 0x7F }}
-
-
-#define DIODE_DIRECTION COL2ROW
+#define DIODE_DIRECTION ROW2COL         // 二级管方向只能为 ROW2COL
 
 #define DEBOUNCE 5
 
@@ -64,18 +62,18 @@
 #define LED_KEY_PRESS_PIN   B2
 
 // alps srgp 200200 encoder pin
-// #define ENCODER_PAD_A   B6
-// #define ENCODER_PAD_B   B5
+#define ENCODERS_PAD_A   { D1 }
+#define ENCODERS_PAD_B   { D0 }
 
 // TrackPoint pin
-// #define PS2_CLOCK_PIN   D2
-// #define PS2_DATA_PIN    D5
+#define PS2_CLOCK_PIN   D5
+#define PS2_DATA_PIN    D2
 
 // 关闭默认的中键滚动功能
-// #define PS2_MOUSE_SCROLL_BTN_MASK   0
+#define PS2_MOUSE_SCROLL_BTN_MASK   0
 
-// #define PS2_MOUSE_USE_REMOTE_MODE
-// #define PS2_MOUSE_INIT_DELAY        3000
+// 延长 PS2 设备初始化等待时间，修复上电初始化失败的可能性
+#define PS2_MOUSE_INIT_DELAY        3000
 
 #ifdef PS2_USE_USART
 // UART 方式

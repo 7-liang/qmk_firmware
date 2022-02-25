@@ -21,6 +21,5 @@
 void encoder_init(void);
 bool encoder_scan(void);
 
-// only one encoder, move index
-bool encoder_update_kb(bool clockwise);
-bool encoder_update_user(bool clockwise);
+bool encoder_update_kb(uint8_t index, bool clockwise);
+bool encoder_update_user(uint8_t index, bool clockwise);
