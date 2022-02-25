@@ -1,0 +1,16 @@
+{
+    "keyboard_name": "tlice",
+    "url": "https://github.com/7-liang",
+    "maintainer": "7Liang",
+    "layouts": {
+        "LAYOUT_ortho_4x13": {
+            "layout": [
+                {}
+            ]
+        },
+        "LAYOUT_via_4x13": {
+            "layout": [
+            ]
+        }
+    }
+}
