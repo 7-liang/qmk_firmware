@@ -122,3 +122,6 @@
 } while (0)
 #define PS2_INT_VECT    INT2_vect
 #endif
+
+// 调整 via 层数
+#define DYNAMIC_KEYMAP_LAYER_COUNT 3
