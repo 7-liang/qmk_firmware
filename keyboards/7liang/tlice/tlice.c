@@ -20,19 +20,9 @@
 
 void matrix_init_kb(void)
 {
-    setPinOutput(LED_KEY_PRESS_PIN);
-    writePinHigh(LED_KEY_PRESS_PIN);
-
     matrix_init_user();
 
     encoder_init();
-}
-
-bool process_record_kb(uint16_t keycode, keyrecord_t *record)
-{
-    writePin(LED_KEY_PRESS_PIN, !record->event.pressed);
-
-    return process_record_user(keycode, record);
 }
 
 void matrix_scan_kb(void)

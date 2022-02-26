@@ -17,7 +17,6 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
 
-CUSTOM_MATRIX = lite
 SRC += utils/ring_encoder.c 
 
 PS2_MOUSE_ENABLE 		= yes 
