@@ -2,7 +2,7 @@
     "name": "Tlice",
     "vendorId": "0xF340",
     "productId": "0x0401",
-    "lighting": "none",
+    "lighting": "qmk_rgblight",
     "matrix": {
         "rows": 4,
         "cols": 13

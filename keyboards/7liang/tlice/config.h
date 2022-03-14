@@ -43,6 +43,16 @@
 
 #define LED_PIN_ON_STATE    0
 
+
+#define RGB_DI_PIN          C7
+#define RGBLED_NUM          9
+
+// animations enable
+#define RGBLIGHT_EFFECT_RAINBOW_MOOD
+#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+
+#define RGBLIGHT_SLEEP
+
 // alps srgp 200200 encoder pin
 #define ENCODERS_PAD_A   { B0 }
 #define ENCODERS_PAD_B   { B1 }

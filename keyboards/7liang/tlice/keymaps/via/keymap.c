@@ -54,9 +54,9 @@ bool encoder_update_user(uint8_t index, bool clockwise)
     {
         case 0:
             if (clockwise) {
-                tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 1, 12));
+                tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 1, 11));
             } else {
-                tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 3, 11));
+                tap_code16(dynamic_keymap_get_keycode(biton32(layer_state), 3, 10));
             }
             break;
 
